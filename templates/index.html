@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>FastAPI Calculator</title>
+
+    <link rel="stylesheet"
+          href="/static/style.css">
+
+</head>
+
+<body>
+
+    <div class="calculator">
+
+        <h1>Calculator</h1>
+
+        <p class="subtitle">
+            Simple FastAPI Calculator
+        </p>
+
+        <input
+            type="number"
+            id="a"
+            placeholder="Enter first number"
+        >
+
+        <input
+            type="number"
+            id="b"
+            placeholder="Enter second number"
+        >
+
+        <div class="buttons">
+
+            <button onclick="calculate(1)">
+                +
+            </button>
+
+            <button onclick="calculate(2)">
+                −
+            </button>
+
+            <button onclick="calculate(3)">
+                ×
+            </button>
+
+            <button onclick="calculate(4)">
+                ÷
+            </button>
+
+        </div>
+
+        <div id="result">
+            Result will appear here
+        </div>
+
+    </div>
+
+
+    <script>
+
+        async function calculate(choice) {
+
+            const a = parseFloat(
+                document.getElementById("a").value
+            );
+
+            const b = parseFloat(
+                document.getElementById("b").value
+            );
+
+            const resultBox =
+                document.getElementById("result");
+
+
+            if (isNaN(a) || isNaN(b)) {
+
+                resultBox.innerText =
+                    "Please enter both numbers.";
+
+                return;
+            }
+
+
+            const response = await fetch(
+                "/calculator",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        a: a,
+                        b: b,
+                        choice: choice
+                    })
+                }
+            );
+
+
+            const data = await response.json();
+
+
+            if (data.error) {
+
+                resultBox.innerText =
+                    data.error;
+
+            } else {
+
+                resultBox.innerText =
+                    `${data.operation}: ${data.result}`;
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>
