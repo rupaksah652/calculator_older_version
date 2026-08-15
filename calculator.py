@@ -37,8 +37,7 @@ def claculator_check():
 #calculator API
 @app.post('/calculator')
 def calculator(data:UserInput):
-    
-
+ 
     if data.choice == 1:
         result = data.a + data.b
         operation = 'Addition'
