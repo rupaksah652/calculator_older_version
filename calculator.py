@@ -5,14 +5,18 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel,Field
 from typing import Annotated
 
+import os
+
 app=FastAPI()
 MODEL_VERSION='2.0.0'
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # Static files
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
 
 # HTML templates
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 
 class UserInput(BaseModel):
     a:Annotated[float,Field(...,description='give the data/values of a')]
@@ -26,9 +30,9 @@ def home(request: Request):
         name="index.html",
         context={})
 
-#claculator status
+#calculator status
 @app.get('/calculator_status')
-def claculator_check():
+def calculator_check():
     return{
         'status':'OK',
         'version':MODEL_VERSION,
@@ -52,12 +56,12 @@ def calculator(data:UserInput):
 
     elif data.choice == 4:
         if data.b == 0:
-            return {'error':'canot divide by 0'}
+            return {'error':'cannot divide by 0'}
         result = data.a / data.b
         operation = 'Division'
     
     else:
-        return {'error':'invalid choice,please choose 1 , 2 , 3 , or 4'}
+        return {'error':'invalid choice, please choose 1, 2, 3, or 4'}
 
     return {
         'a' : data.a,
