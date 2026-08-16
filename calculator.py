@@ -25,6 +25,9 @@ class UserInput(BaseModel):
 
 #website
 @app.get("/", response_class=HTMLResponse)
+@app.get("/api", response_class=HTMLResponse)
+@app.get("/api/index", response_class=HTMLResponse)
+@app.get("/api/index.py", response_class=HTMLResponse)
 def home(request: Request):
     return templates.TemplateResponse(request=request,
         name="index.html",
